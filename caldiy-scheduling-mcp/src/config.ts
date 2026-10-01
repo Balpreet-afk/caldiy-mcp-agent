@@ -39,7 +39,7 @@ const PriorityEnum = z.enum(["CRITICAL", "HIGH", "NORMAL", "LOW"]);
 const PolicySchema = z.object({
   autonomy_level: z.number().int().min(0).max(4),
   timezone: z.string(),
-  working_hours: z.record(z.string()),
+  working_hours: z.record(z.union([z.string(), z.array(z.string())])),
   default_priority: PriorityEnum.default("NORMAL"),
   priority_rules: z
     .array(
@@ -78,6 +78,7 @@ const PolicySchema = z.object({
   plan_ttl_minutes: z.number().int().default(5),
 });
 
+export type Priority = z.infer<typeof PriorityEnum>;
 export type Policy = z.infer<typeof PolicySchema>;
 export type Config = z.infer<typeof EnvSchema> & { policy: Policy };
 

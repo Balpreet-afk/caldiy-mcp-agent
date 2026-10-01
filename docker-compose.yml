@@ -1,0 +1,43 @@
+services:
+  caldiy-server:
+    build:
+      context: ./caldiy-server
+      dockerfile: Dockerfile
+    container_name: caldiy-server
+    restart: always
+    ports:
+      - "5555:5555"
+      - "3000:3000"
+    environment:
+      - PORT=5555
+      - WEB_PORT=3000
+      - CAL_API_KEY=cal_live_28a9b73491c107297eef840f34581290
+      - TIMEZONE=Asia/Kolkata
+      - OWNER_NAME=Balpreet
+      - OWNER_EMAIL=balpreet@example.com
+
+  database:
+    container_name: database
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_USER=unicorn_user
+      - POSTGRES_PASSWORD=magical_password
+      - POSTGRES_DB=calendso
+    volumes:
+      - database-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    restart: always
+    volumes:
+      - redis-data:/data
+    ports:
+      - "6379:6379"
+
+volumes:
+  database-data:
+  redis-data:

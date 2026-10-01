@@ -14,7 +14,7 @@ async function main() {
 
   const server = createServer(config);
 
-  if (config.transport === "stdio") {
+  if (config.MCP_TRANSPORT === "stdio") {
     const { StdioServerTransport } = await import(
       "@modelcontextprotocol/sdk/server/stdio.js"
     );

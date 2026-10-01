@@ -1,0 +1,44 @@
+# policy.example.yaml — Copy to policy.yaml and edit before running.
+# All fields are validated with zod at startup; server will fail fast on errors.
+
+autonomy_level: 3          # 0=suggest only  1=confirm first  2=auto-book
+                           # 3=negotiate+book  4=+displace lower-priority
+timezone: Asia/Kolkata
+working_hours:
+  mon-fri: ["10:00-18:00"]
+
+default_priority: NORMAL
+
+priority_rules:
+  - match: { attendee_domain: "kodev.studio" }
+    priority: LOW
+  - match: { event_type_slug: "client-call" }
+    priority: HIGH
+
+displacement:
+  matrix:
+    HIGH:     { LOW: auto, NORMAL: approval, HIGH: deny, CRITICAL: deny }
+    CRITICAL: { LOW: auto, NORMAL: approval, HIGH: approval, CRITICAL: deny }
+    NORMAL:   { LOW: approval }
+    LOW:      {}
+  max_displacements_per_plan: 1
+  max_displacements_per_day: 3
+  min_notice_hours: 24
+  protect_external_attendees: true
+  max_reschedules_per_booking: 2
+  alt_slot_search_days: 7
+  alt_slot_strategy: earliest
+
+cancel: deny               # deny | approval | auto
+
+public:
+  expose_titles: false
+  allow_self_reschedule: true
+  allow_self_cancel: true
+
+limits:
+  tool_calls_per_minute: 30
+  bookings_per_day_per_attendee: 3
+
+approval_ttl_minutes: 60
+plan_ttl_minutes: 5
