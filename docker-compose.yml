@@ -11,7 +11,7 @@ services:
     environment:
       - PORT=5555
       - WEB_PORT=3000
-      - CAL_API_KEY=cal_live_28a9b73491c107297eef840f34581290
+      - CAL_API_KEY=${CAL_API_KEY}
       - TIMEZONE=Asia/Kolkata
       - OWNER_NAME=Balpreet
       - OWNER_EMAIL=balpreet@example.com
