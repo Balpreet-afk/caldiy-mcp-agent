@@ -87,6 +87,24 @@ export type Config = z.infer<typeof EnvSchema> & { policy: Policy };
 // ---------------------------------------------------------------------------
 
 export function loadConfig(): Config {
+  if (process.env.NODE_ENV !== "test") {
+    try {
+      const envFileContent = readFileSync(".env", "utf8");
+      for (const line of envFileContent.split("\n")) {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith("#")) continue;
+        const eqIdx = trimmed.indexOf("=");
+        if (eqIdx !== -1) {
+          const key = trimmed.slice(0, eqIdx).trim();
+          const val = trimmed.slice(eqIdx + 1).trim();
+          if (key && !(key in process.env)) {
+            process.env[key] = val;
+          }
+        }
+      }
+    } catch {}
+  }
+
   const env = EnvSchema.parse(process.env);
 
   const rawPolicy = parseYaml(readFileSync(env.POLICY_FILE, "utf8"));

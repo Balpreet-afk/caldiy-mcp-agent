@@ -1,14 +1,9 @@
 /**
- * tools/owner.ts — Tool handlers for the `owner` profile (in addition to public tools)
- *
- * Tools: get_schedule, get_booking, get_meeting_priority, set_meeting_priority,
- *        get_policy, check_policy,
- *        list_approvals, approve_action, reject_action, list_audit
- *
- * Approvals are NEVER exposed on the public profile (spec §8).
- * Attendee free text returned only in `untrusted` field (spec §10).
+ * tools/owner.ts — Tool handlers for the `owner` profile
  */
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type Database from "better-sqlite3";
 import type { Config } from "../config.js";
-export declare function registerOwnerTools(_server: McpServer, _config: Config): void;
+import { CalDiyClient } from "../caldiy/client.js";
+export declare function registerOwnerTools(server: McpServer, config: Config, db: Database.Database, client: CalDiyClient): void;
 //# sourceMappingURL=owner.d.ts.map

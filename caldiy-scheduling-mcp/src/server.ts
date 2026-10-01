@@ -1,34 +1,37 @@
 /**
  * server.ts — MCP Server + tool registration by profile
- *
- * Tools NOT in the active MCP_PROFILE are never registered (spec §2).
- * Public profile tools: get_owner_info, find_slots, plan_booking,
- *   execute_plan, book_meeting, get_booking_status,
- *   reschedule_own_booking, cancel_own_booking
- * Owner profile adds: get_schedule, get_booking, get_meeting_priority,
- *   set_meeting_priority, get_policy, check_policy,
- *   list_approvals, approve_action, reject_action, list_audit
  */
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type Database from "better-sqlite3";
 import type { Config } from "./config.js";
+import { CalDiyClient } from "./caldiy/client.js";
+import { openStore } from "./store/index.js";
+import { registerPublicTools } from "./tools/public.js";
+import { registerOwnerTools } from "./tools/owner.js";
+import { NotifyOutbox } from "./notify/index.js";
 
-// TODO: import tool handlers once each is implemented
-// import { registerPublicTools } from "./tools/public.js";
-// import { registerOwnerTools } from "./tools/owner.js";
+export function createServer(
+  config: Config,
+  customDb?: Database.Database,
+  customClient?: CalDiyClient
+): { server: McpServer; db: Database.Database; client: CalDiyClient } {
+  const db = customDb || openStore(config.DATA_DIR);
+  const client = customClient || new CalDiyClient(config);
+  const notifyOutbox = new NotifyOutbox(db, config.NOTIFY_WEBHOOK_URL);
 
-export function createServer(config: Config): McpServer {
   const server = new McpServer({
     name: "caldiy-scheduling-mcp",
     version: "0.1.0",
   });
 
   // Always register public tools
-  // registerPublicTools(server, config);
+  registerPublicTools(server, config, db, client, notifyOutbox);
 
+  // Register owner tools only when MCP_PROFILE=owner
   if (config.MCP_PROFILE === "owner") {
-    // registerOwnerTools(server, config);
+    registerOwnerTools(server, config, db, client);
   }
 
-  return server;
+  return { server, db, client };
 }

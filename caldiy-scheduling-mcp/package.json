@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsx watch src/index.ts",
-    "start": "node dist/index.js",
+    "start": "node --env-file=.env dist/index.js",
     "test": "vitest run",
     "lint": "eslint src test"
   },
@@ -17,6 +17,7 @@
     "@modelcontextprotocol/sdk": "^1.0.0",
     "better-sqlite3": "^13.0.3",
     "pino": "^9.0.0",
+    "typescript": "^5.4.0",
     "yaml": "^2.4.0",
     "zod": "^3.23.0"
   },
@@ -25,7 +26,6 @@
     "@types/node": "^20.0.0",
     "msw": "^2.0.0",
     "tsx": "^4.0.0",
-    "typescript": "^5.4.0",
     "vitest": "^1.6.0"
   }
 }

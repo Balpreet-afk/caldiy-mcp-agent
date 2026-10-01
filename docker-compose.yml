@@ -16,6 +16,29 @@ services:
       - OWNER_NAME=Balpreet
       - OWNER_EMAIL=balpreet@example.com
 
+  # caldiy-scheduling-mcp:
+  #   build:
+  #     context: ./caldiy-scheduling-mcp
+  #     dockerfile: Dockerfile
+  #   container_name: caldiy-scheduling-mcp
+  #   restart: always
+  #   ports:
+  #     - "3333:3333"
+  #   environment:
+  #     - CAL_API_URL=http://caldiy-server:5555
+  #     - CAL_API_KEY=cal_live_28a9b73491c107297eef840f34581290
+  #     - MCP_PROFILE=public
+  #     - MCP_TRANSPORT=http
+  #     - MCP_HTTP_PORT=3333
+  #     - MCP_HTTP_BEARER_TOKEN=cal_live_28a9b73491c107297eef840f34581290
+  #     - POLICY_FILE=./policy.yaml
+  #     - DATA_DIR=/app/data
+  #     - DRY_RUN=false
+  #   volumes:
+  #     - mcp-data:/app/data
+  #   depends_on:
+  #     - caldiy-server
+
   database:
     container_name: database
     image: postgres:latest
@@ -41,3 +64,4 @@ services:
 volumes:
   database-data:
   redis-data:
+  # mcp-data:
